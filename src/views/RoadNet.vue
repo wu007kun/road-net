@@ -1,42 +1,53 @@
 <template>
   <div class="road-net map-page">
-    <div class="ctrl"
+    <section class="ctrl"
       :style="{'pointer-events': freezing ? 'none' : 'auto'}">
-      <p class="ctrl-title">
-        <span>点位</span>
-        <span @click="addPoint">新增</span>
-      </p>
-      <div class="point-list">
-        <p class="point-name"
-          v-for="(item, index) in pointList"
-          :key="index">
-          <span @click="toggleActivePoint(item)">{{ item.name }}</span>
-          <span v-if="activePoint === item" @click="editPoint(item)">&nbsp;编辑</span>
-          <span v-if="activePoint === item" @click="delPoint(item, index)">&nbsp;删除</span>
+      <div class="ctrl-section">
+        <p class="ctrl-title">点位 ({{ pointList.length }}个)
+          <button @click="addPoint">新增</button>
         </p>
+        <div class="point-list">
+          <p class="point-name"
+            v-for="(item, index) in pointList"
+            :key="index">
+            <span @click="toggleActivePoint(item)">{{ item.name }}</span>
+            <button v-if="activePoint === item" @click="editPoint(item)">编辑</button>
+            <button v-if="activePoint === item" @click="delPoint(item, index)">删除</button>
+          </p>
+        </div>
       </div>
-      <p class="ctrl-title">
-        <span>路径</span>
-        <span @click="addPolyline">新增</span>
-      </p>
-      <div class="road-list">
-        <p class="road-name"
-          v-for="(road, index) in polylineList"
-          :key="index">
-          <span>{{ road.endPoints[0].name }} - {{ road.endPoints[1].name }}</span>
-          <span>{{ road.distance }}</span>
-          <span @click="editRoad(road)">&nbsp;编辑</span>
-          <span @click="delRoad(road, index)">&nbsp;删除</span>
+      <div class="ctrl-section">
+        <p class="ctrl-title">路径 ({{ polylineList.length }}条)
+          <button @click="addPolyline">新增</button>
         </p>
+        <div class="road-list">
+          <div class="road-row"
+            v-for="(road, index) in polylineList"
+            :key="index">
+            <span class="road-name">{{ road.endPoints[0].name }} - {{ road.endPoints[1].name }}</span>
+            <span class="road-distance">{{ road.distance }}米</span>
+            <button @click="editRoad(road)">编辑</button>
+            <button @click="delRoad(road, index)">删除</button>
+          </div>
+        </div>
       </div>
-      <input type="text" v-model="start">
-      <input type="text" v-model="end">
-      <p @click="getMatrix">更新矩阵</p>
-      <p @click="showResult">查看结果</p>
-      <p v-show="result.distance">距离{{ result.distance }}</p>
-      <p v-show="result.distance">路线{{ result.route.join(' → ') }}</p>
-    </div>
-    <div class="map-wrapper">
+      <div class="ctrl-section">
+        <p class="ctrl-title">测试</p>
+        <div class="inline-form">
+          <label for="">起点</label>
+          <input v-model="start" type="text">
+          <label for="">终点</label>
+          <input v-model="end" type="text">
+        </div>
+        <div class="result-panel">
+          <button @click="getMatrix">更新矩阵</button>
+          <button @click="showResult">查看结果</button>
+          <p v-show="result.distance">距离 {{ result.distance }}米</p>
+          <p v-show="result.distance">路线 {{ result.route.join(' → ') }}</p>
+        </div>
+      </div>
+    </section>
+    <section class="map-wrapper">
       <div class="map-dom" id="road-map"></div>
       <div class="map-window"
         v-show="pointWindow.visible"
@@ -54,7 +65,7 @@
         <p>{{ edittingRoad.endPoints[0].name }} - {{ edittingRoad.endPoints[1].name }}</p>
         <p @click="saveEditRoad">保存</p>
       </div>
-    </div>
+    </section>
   </div>
 </template>
 
@@ -274,7 +285,7 @@ export default {
           map: this.map,
           path: path,
           borderWeight: 3, // 线条宽度，默认为 1
-          strokeColor: '#6BFF00', // 线条颜色
+          strokeColor: '#FFC100', // 线条颜色
           strokeOpacity: 0,
           lineJoin: 'round' // 折线拐点连接处样式
         })
@@ -320,7 +331,7 @@ export default {
         map: this.map,
         path: path,
         borderWeight: 3, // 线条宽度，默认为 1
-        strokeColor: '#6BFF00', // 线条颜色
+        strokeColor: '#FFC100', // 线条颜色
         strokeOpacity: 0,
         lineJoin: 'round' // 折线拐点连接处样式
       })
@@ -458,16 +469,50 @@ export default {
 <style lang="less">
 @import url('~@/style/MapPage.less');
 .road-net {
-  .ctrl {
-    .ctrl-title {
-      display: flex; justify-content: space-between;
-    }
-    .point-list {
-      display: flex; flex-wrap: wrap;
-      .point-name {
-        margin: 5px; padding: 5px;
-        background-color: #4798FC; color: #fff;
+  .point-list {
+    display: flex; flex-wrap: wrap;
+    .point-name {
+      margin: 0 5px 5px 0; padding: 2px 5px;
+      background-color: #42C2C2;
+      color: #fcfcfc;
+      border-radius: 3px;
+      border: 1px solid #129090;
+      button {
+        margin-left: 5px;
       }
+    }
+  }
+  .road-row {
+    margin: 5px 0;
+    padding: 0 10px;
+    height: 30px;
+    line-height: 30px;
+    border-radius: 5px;
+    border: 1px solid #e2e2e2;
+    box-shadow: 0 2px 8px 0 rgba(0, 0, 0, .2);
+    text-align: left;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    // align-content: center;
+    .road-name {
+      width: 100px;
+      flex-grow: 1;
+    }
+    .road-distance {
+      width: 80px;
+    }
+    button {
+      margin-left: 5px;
+    }
+  }
+  .result-panel {
+    text-align: left;
+    button {
+      margin: 10px 10px 0 0;
+    }
+    p {
+      margin-top: 10px;
     }
   }
 }

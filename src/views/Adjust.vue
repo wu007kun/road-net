@@ -3,8 +3,12 @@
     <section class="ctrl"
       :style="{'pointer-events': freezing ? 'none' : 'auto'}">
       <div class="ctrl-section">
+        <p class="ctrl-title">图片</p>
+        <ImgUploader @srcChange="setLayer"/>
+      </div>
+      <div class="ctrl-section">
         <p class="ctrl-title">微调步长</p>
-        <div class="step-form">
+        <div class="inline-form">
           <label for="">经度</label>
           <input v-model="lngStep" type="text">
           <label for="">纬度</label>
@@ -27,12 +31,8 @@
         </div>
       </div>
       <div class="ctrl-section">
-        <p class="ctrl-title">图片</p>
-        <ImgUploader @srcChange="setLayer"/>
-      </div>
-      <div class="ctrl-section">
         <p class="ctrl-title">参考点
-          <button @click="addPoint">增加</button>
+          <button @click="addPoint">新增</button>
         </p>
         <ul>
           <li class="refer-point"
@@ -41,13 +41,7 @@
             <div>
               <p>{{ item.name }}</p>
               <p>{{ item.lng }}，{{ item.lat }}</p>
-              <div class="point-ctrl">
-                <div class="ctrl-btn"
-                  @click="delPoint(item, index)">
-                  <img src="~@/assets/logo.png" alt="">
-                  <span>删除</span>
-                </div>
-              </div>
+              <button @click="delPoint(item, index)">删除</button>
             </div>
             <ManualAdjust @adjust="direction => { adjustReferMarker(item, direction) }"/>
           </li>
@@ -141,7 +135,7 @@ export default {
   },
   watch: {
     referPtOn (val) {
-      // 增加点位和微调位置时会设为true
+      // 新增点位和微调位置时会设为true
       let arr = Object.values(this.markerObj)
       if (val) {
         arr.forEach(marker => {
@@ -336,17 +330,6 @@ export default {
 <style lang="less">
 @import url('~@/style/MapPage.less');
 .adjust {
-  .step-form {
-    display: flex;
-    align-items: center;
-    input {
-      width: 50px;
-      flex-grow: 1;
-    }
-    input:first-of-type {
-      margin-right: 10px;
-    }
-  }
   .vertex {
     margin: 5px 0;
     padding: 5px;
@@ -370,20 +353,6 @@ export default {
     align-items: center;
     text-align: left;
     border: 1px dashed #ccc;
-    .point-ctrl {
-      display: flex;
-      .ctrl-btn {
-        margin-right: 10px;
-        display: flex;
-        align-items: center;
-        cursor: pointer;
-        img {
-          margin-right: 3px;
-          width: 16px;
-          height: 16px;
-        }
-      }
-    }
   }
   .map-ctrl {
     position: absolute;
@@ -397,7 +366,7 @@ export default {
       height: 30px;
       line-height: 30px;
       border: 1px solid #333;
-      background-color: #fff;
+      background-color: #fcfcfc;
     }
     .turned-off {
       background-color: rgba(200, 200, 200, .3);

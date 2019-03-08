@@ -50,6 +50,7 @@ export default {
     flex-grow: 1;
     min-height: 100px;
     background-color: #fff;
+    border: 1px dashed #e2e2e2;
     img {
       width: 100%;
       display: block;
