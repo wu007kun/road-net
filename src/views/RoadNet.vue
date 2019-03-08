@@ -1,5 +1,5 @@
 <template>
-  <div class="home">
+  <div class="road-net map-page">
     <div class="ctrl"
       :style="{'pointer-events': freezing ? 'none' : 'auto'}">
       <p class="ctrl-title">
@@ -37,8 +37,8 @@
       <p v-show="result.distance">路线{{ result.route.join(' → ') }}</p>
     </div>
     <div class="map-wrapper">
-      <div id="my-map"></div>
-      <div class="point-window"
+      <div class="map-dom" id="road-map"></div>
+      <div class="map-window"
         v-show="pointWindow.visible"
         :style="{
           left: pointWindow.x + 'px',
@@ -123,7 +123,7 @@ export default {
     ...mapMutations(['setDistanceDic', 'setLastPointDic']),
     // 创建地图和图片图层
     initMap () {
-      var imageLayer = new AMap.ImageLayer({
+      let imageLayer = new AMap.ImageLayer({
         url: require('@/assets/demo.jpg'),
         bounds: new AMap.Bounds(
           [101.560182, 36.644914],
@@ -131,7 +131,7 @@ export default {
         ),
         zooms: [15, 20]
       })
-      this.map = new AMap.Map('my-map', {
+      this.map = new AMap.Map('road-map', {
         zoom: 16, // 级别
         zooms: [3, 20],
         center: [101.564683, 36.647354], // 中心点坐标
@@ -456,12 +456,9 @@ export default {
 }
 </script>
 <style lang="less">
-.home {
-  height: 100%;
-  display: flex;
+@import url('~@/style/MapPage.less');
+.road-net {
   .ctrl {
-    width: 400px;
-    height: 100%;
     .ctrl-title {
       display: flex; justify-content: space-between;
     }
@@ -471,30 +468,6 @@ export default {
         margin: 5px; padding: 5px;
         background-color: #4798FC; color: #fff;
       }
-    }
-  }
-  .map-wrapper {
-    position: relative;
-    width: calc(100% - 400px);
-    height: 100%;
-    #my-map {
-      width: 100%;
-      height: 100%;
-    }
-    .point-window {
-      position: absolute;
-      padding: 10px;
-      height: 50px;
-      background-color: #fff;
-      border: 1px solid #000;
-    }
-    .polyline-window {
-      position: absolute;
-      top: 5px;
-      right: 5px;
-      padding: 10px;
-      background-color: #fff;
-      border: 1px solid #000;
     }
   }
 }
